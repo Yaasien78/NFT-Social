@@ -16,17 +16,10 @@ export default async function handler(req, res) {
     
     if (piUser.username !== username) {
       return res.status(401).json({ error: 'Invalid token' });
-    }
-    
-    await kv.set(`user:${uid}`, {
-      username: piUser.username,
-      uid: piUser.uid,
-      lastLogin: new Date().toISOString()
-    });
+    }res.status(200).json({ success: true, user: piUser });
     
     res.status(200).json({ success: true, user: piUser });
     
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
