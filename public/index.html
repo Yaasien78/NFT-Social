@@ -1,12 +1,19 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
   Pi.init({ version: "2.0", sandbox: true });
-
-  Pi.onReady(function() {
+  
+  function doLogin() {
     Pi.authenticate(['username'], function(auth) {
       document.getElementById("status").innerText = "Signed in as " + auth.user.username;
     }, function(error) {
       console.log("Auth error:", error);
     });
-  });
+  }
+
+  // Coba login pas SDK siap
+  if (Pi) {
+    Pi.onReady(doLogin);
+    // Fallback: kalau onReady gak ke-trigger, jalanin 2 detik lagi
+    setTimeout(doLogin, 2000);
+  }
 </script>
