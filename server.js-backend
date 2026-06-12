@@ -1,0 +1,23 @@
+import express from 'express'
+import fetch from 'node-fetch'
+import session from 'express-session'
+
+const app = express()
+app.use(express.json())
+app.use(express.static('.'))
+app.use(session({ secret: 'ganti-ini-jadi-random', resave: false, saveUninitialized: true }))
+
+app.post('/auth/pi', async (req, res) => {
+  const { accessToken } = req.body
+  const response = await fetch('https://api.minepi.com/v2/me', {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  })
+  const user = await response.json()
+  
+  if (!user.username) return res.status(401).json({ error: 'Invalid token' })
+  
+  req.session.username = user.username
+  res.json({ username: user.username })
+})
+
+app.listen(3000, () => console.log('Server jalan di port 3000'))
