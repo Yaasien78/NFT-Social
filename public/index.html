@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>NFT Social</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    Pi.init({ version: "2.0", sandbox: true });
-    
-    Pi.authenticate(['username', 'payments'], function(payment) {})
-      .then(function(auth) {
-        document.body.innerHTML += '<p>Signed in as: ' + auth.user.username + '</p>';
-      })
-      .catch(function(error) {
-        console.error(error);
-      });
-  </script>
-</head>
-<body>
-  <h1>NFT Social App</h1>
-  <p>Pi App is running</p>
-</body>
-</html>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+  Pi.init({ version: "2.0", sandbox: true });
+
+  Pi.onReady(function() {
+    Pi.authenticate(['username'], function(auth) {
+      document.getElementById("status").innerText = "Signed in as " + auth.user.username;
+    }, function(error) {
+      console.log("Auth error:", error);
+    });
+  });
+</script>
