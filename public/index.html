@@ -1,19 +1,25 @@
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-  Pi.init({ version: "2.0", sandbox: true });
-  
-  function doLogin() {
-    Pi.authenticate(['username'], function(auth) {
-      document.getElementById("status").innerText = "Signed in as " + auth.user.username;
-    }, function(error) {
-      console.log("Auth error:", error);
-    });
-  }
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NFT Social</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body>
+  <h1>Pi App is running</h1>
+  <p id="status">Click button to sign in</p>
+  <button id="loginBtn" style="padding:10px 20px; font-size:16px;">Sign in with Pi</button>
 
-  // Coba login pas SDK siap
-  if (Pi) {
-    Pi.onReady(doLogin);
-    // Fallback: kalau onReady gak ke-trigger, jalanin 2 detik lagi
-    setTimeout(doLogin, 2000);
-  }
-</script>
+  <script>
+    Pi.init({ version: "2.0", sandbox: true });
+    
+    document.getElementById("loginBtn").onclick = function() {
+      Pi.authenticate(['username'], function(auth) {
+        document.getElementById("status").innerText = "Signed in as " + auth.user.username;
+        document.getElementById("loginBtn").style.display = "none";
+      }, function(error) {
+        document.getElementById("status").innerText = "Error: " + error;
+      });
+    };
+  </script>
+</body>
+</html>
