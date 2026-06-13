@@ -11,31 +11,32 @@
 
   <script>
   Pi.init({ version: "2.0", sandbox: false });
-    
-  Pi.authenticate(['username'], function(auth) {}, function(err){ 
-  alert("Pi Login Error: " + JSON.stringify(err)); 
-  document.getElementById("status").innerText = "Error: " + err;
+
+document.getElementById("loginBtn").onclick = function() {
+  Pi.authenticate(['username'], function(auth) {}, function(err){
+    alert("Pi Login Error: " + JSON.stringify(err));
+    document.getElementById("status").innerText = "Error: " + err;
+  })
+  .then(function(auth) {
+    return fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accessToken: auth.accessToken,
+        username: auth.user.username,
+        uid: auth.user.uid
+      })
     })
-    .then(function(auth) {
-      return fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          accessToken: auth.accessToken,
-          username: auth.user.username,
-          uid: auth.user.uid
-        })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("status").innerText = "Signed in as " + data.user.username;
+    document.getElementById("loginBtn").style.display = "none";
+  })
+  .catch(function(error) {
+    document.getElementById("status").innerText = "Error: " + error;
   });
-})
-.then(res => res.json())
-.then(data => {
-  document.getElementById("status").innerText = "Signed in as " + data.user.username;
-  document.getElementById("loginBtn").style.display = "none";
-})
-.catch(function(error) {
-  document.getElementById("status").innerText = "Error: " + error;
-});
-      });
+};
     };
   </script>
 </body>
